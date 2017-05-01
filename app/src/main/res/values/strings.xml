@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">JetBrainsIntership</string>
+    <string name="search_button">Искать</string>
+    <string name="voice_search">Голосовой поиск</string>
+
+    <string name="test_user_name">LionZXY</string>
+    <string name="test_user_score">48</string>
+    <string name="user_bio_none">Биография отсутсвует…</string>
+
+    <string name="error_none">Запрос поиска не может быть пустым. Ты ищешь ничто?</string>
+    <string name="error_none_answer">Ничего не найдено :(</string>
+    <string name="error_ddos">Остоновись, подумой! Слишком быстро крутишь крутилку, гитхабу не нравиться. Подожди несколько секунд</string>
+    <string name="error_network">У тебя нет интернета, либо он нестабильный. Пожалуйста, повтори запрос позже, как у тебя будет сеть</string>
+</resources>
