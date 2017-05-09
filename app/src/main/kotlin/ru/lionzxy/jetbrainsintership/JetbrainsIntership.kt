@@ -4,6 +4,9 @@ import android.app.Application
 import android.preference.PreferenceManager
 import io.realm.Realm
 import ru.lionzxy.jetbrainsintership.utils.Constants
+import android.os.StrictMode
+
+
 
 
 /**
@@ -16,6 +19,18 @@ class JetbrainsIntership : Application() {
         super.onCreate()
         Realm.init(this)
         INSTANCE = this
+
+        if (BuildConfig.DEBUG) {
+            StrictMode.setThreadPolicy(StrictMode.ThreadPolicy.Builder()
+                    .detectAll()
+                    .penaltyLog()
+                    .build())
+            StrictMode.setVmPolicy(StrictMode.VmPolicy.Builder()
+                    .detectAll()
+                    .penaltyLog()
+                    .penaltyDeath()
+                    .build())
+        }
     }
 
     companion object Factory {

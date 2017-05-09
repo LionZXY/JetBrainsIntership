@@ -26,7 +26,6 @@ class EndlessData {
     private val listeners = ArrayList<OnDataReceive>()
     private val listenersQuery = ArrayList<OnChangeQuery>()
     private val pageLoadingNow = ArrayList<Int>()
-    private var errorHelper: ErrorHelper? = null
 
     interface OnDataReceive {
         fun onDataReceive(page: Int)
@@ -42,7 +41,6 @@ class EndlessData {
                 .baseUrl(Constants.URL) //Базовая часть адреса
                 .addConverterFactory(GsonConverterFactory.create()) //Конвертер, необходимый для преобразования JSON'а в объекты
                 .build().create(GitHubApi::class.java)
-        errorHelper = ErrorHelper(this)
     }
 
     fun getCount(): Int {
@@ -74,6 +72,8 @@ class EndlessData {
     }
 
     fun setQuery(query: String?) {
+        if(query == this.query)
+            return
         var oldString = this.query
         this.query = query
         totalCount = 0

@@ -27,10 +27,10 @@ class SearchQueryListener(var mSearchView: FloatingSearchView?, val endlessData:
     // Показываем последние 3 запроса поиска
     override fun onFocus() {
         var realmObj = realm?.where(SearchQuery::class.java)?.findAllSorted("date", Sort.DESCENDING)!!
-        val lastIndex = if (realmObj?.size!! < 3) realmObj.size - 1 else 2
+        val lastIndex = if (realmObj.size < 3) realmObj.size - 1 else 2
         if (realmObj.size > 0) {
             val list: ArrayList<MySearchSuggestion> = (0..lastIndex).mapTo(ArrayList()) { MySearchSuggestion(realmObj[it]?.query!!) }
-            mSearchView!!.swapSuggestions(list.reversed())
+            mSearchView!!.swapSuggestions(list)
         }
     }
 
@@ -61,7 +61,7 @@ class SearchQueryListener(var mSearchView: FloatingSearchView?, val endlessData:
                 mSearchView!!.showProgress()
 
                 //Ищем по регулярке запрос
-                realm?.where(SearchQuery::class.java)?.like("query", "$newQuery*")?.findAllAsync()?.addChangeListener { collection, changeSet ->
+                realm?.where(SearchQuery::class.java)?.like("query", "$newQuery*")?.findAllAsync()?.addChangeListener { collection ->
                     val list: ArrayList<MySearchSuggestion> = ArrayList()
                     collection
                             .filter { it.query != null }

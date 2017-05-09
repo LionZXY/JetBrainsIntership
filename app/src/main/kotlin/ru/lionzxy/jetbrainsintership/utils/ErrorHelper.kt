@@ -9,9 +9,9 @@ import java.util.concurrent.TimeUnit
  *
  * Возможно полное или частичное копирование
  *
- * Изначально класс планировался как эдакий центр по решению проблем, возникающих в программе и попытки решить их.
- * Плохая идея
  */
+
+@Deprecated("Изначально класс планировался как эдакий центр по решению проблем, возникающих в программе и попытки решить их. Плохая идея")
 class ErrorHelper(val endlessData: EndlessData) : EndlessData.OnChangeQuery, EndlessData.OnDataReceive {
     private var scheduler = Executors.newScheduledThreadPool(1)
 

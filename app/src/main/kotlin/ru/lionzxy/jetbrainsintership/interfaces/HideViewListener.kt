@@ -2,6 +2,7 @@ package ru.lionzxy.jetbrainsintership.interfaces
 
 import com.arlib.floatingsearchview.FloatingSearchView
 import ru.lionzxy.jetbrainsintership.utils.Constants
+import ru.lionzxy.jetbrainsintership.utils.PixelHelper
 import java.lang.ref.WeakReference
 
 /**
@@ -17,7 +18,9 @@ class HideViewListener(val view: WeakReference<FloatingSearchView>) : android.su
         if (view.get() != null) {
             var newTop: Int = view.get()!!.top
             newTop -= dy
-            var min = (ru.lionzxy.jetbrainsintership.utils.PixelHelper.pixelFromDP(view.get()!!.resources, Constants.SEARCHVIEW_HEIGHT_DP) + startTop).toInt() * -1
+            // У FloatingSearchView не фиксированный размер. Поэтому очень сложно/не нужно брать размер с View. Пусть лучше будет так хардкорно.
+            // P.S. Можно еще вынести размер в отдельный values. Ну суть останется примерно та же.
+            var min = (PixelHelper.pixelFromDP(view.get()!!.resources, Constants.SEARCHVIEW_HEIGHT_DP) + startTop).toInt() * -1
             if (newTop > startTop)
                 newTop = startTop
             if (newTop < min)

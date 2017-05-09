@@ -5,7 +5,7 @@ apply plugin: 'realm-android'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    buildToolsVersion "25.0.3"
     defaultConfig {
         applicationId "ru.lionzxy.jetbrainsintership"
         minSdkVersion 19
@@ -16,8 +16,8 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), "proguard-rules.pro"
         }
     }
     sourceSets {
@@ -29,8 +29,6 @@ android {
 }
 
 kapt {
-
-    generateStubs = true
     arguments {
         arg("androidManifestFile", variant.outputs[0].processResourcesTask.manifestFile)
     }
@@ -42,12 +40,15 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:25.3.1'
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    //noinspection GradleCompatible этот игнор я поставил находясь в трезвом уме и здравой памяти. Осознаю что это костыль, в продакшане надо перебирать все библиотеки на старые версии
+    compile 'com.android.support:appcompat-v7:25.3.0'
     testCompile 'junit:junit:4.12'
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
-    compile 'com.github.arimorty:floatingsearchview:2.0.4'
+    //TODO: Ждем фикса: https://github.com/arimorty/floatingsearchview/issues/218
+    compile 'com.github.arimorty:floatingsearchview:2.0.3'
     compile 'cz.kinst.jakub:viewmodelbinding:2.0.0'
+    compile 'jp.wasabeef:recyclerview-animators:2.2.6'
+
 
     kapt "com.android.databinding:compiler:2.3.1"
     compile 'com.squareup.retrofit2:retrofit:2.2.0'

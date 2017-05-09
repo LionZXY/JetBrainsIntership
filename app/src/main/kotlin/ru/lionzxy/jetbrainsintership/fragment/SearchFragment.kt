@@ -14,6 +14,7 @@ import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.Toast
 import com.arlib.floatingsearchview.FloatingSearchView
+import jp.wasabeef.recyclerview.adapters.AlphaInAnimationAdapter
 import ru.lionzxy.jetbrainsintership.JetbrainsIntership
 import ru.lionzxy.jetbrainsintership.R
 import ru.lionzxy.jetbrainsintership.adapters.SearchResultListAdater
@@ -36,7 +37,9 @@ import java.net.UnknownHostException
  */
 
 open class SearchFragment : Fragment(), EndlessData.OnDataReceive, EndlessData.OnChangeQuery, OnUserClick {
-    public val TAG = "searchfragment";
+    companion object {
+        val TAG = "searchfragment";
+    }
 
     private var mSearchQuery: SearchQueryListener? = null
     private var mSearchView: FloatingSearchView? = null
@@ -46,6 +49,8 @@ open class SearchFragment : Fragment(), EndlessData.OnDataReceive, EndlessData.O
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
+
+        retainInstance = true
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
@@ -55,9 +60,7 @@ open class SearchFragment : Fragment(), EndlessData.OnDataReceive, EndlessData.O
         mSearchView = view.findViewById(R.id.search_input) as FloatingSearchView
         mProgressBar = view.findViewById(R.id.search_progress) as ProgressBar
 
-        mEndlessData = EndlessData()
-        mEndlessData!!.setQuery(JetbrainsIntership.getLastQuery())
-        mRecyclerView!!.adapter = SearchResultListAdater(mEndlessData!!, this)
+        mRecyclerView!!.adapter = AlphaInAnimationAdapter(SearchResultListAdater(mEndlessData!!, this))
         mRecyclerView!!.layoutManager = LinearLayoutManager(context)
         mRecyclerView!!.addOnScrollListener(EndlessScrollListener(WeakReference(mEndlessData!!)))
         mRecyclerView!!.addOnScrollListener(HideViewListener(WeakReference(mSearchView!!)))
@@ -74,6 +77,14 @@ open class SearchFragment : Fragment(), EndlessData.OnDataReceive, EndlessData.O
         mEndlessData?.addListenerQuery(this)
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        mEndlessData = EndlessData()
+        retainInstance = true
+    }
+
+
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         Log.d(TAG, "OnCreateView")
@@ -82,11 +93,8 @@ open class SearchFragment : Fragment(), EndlessData.OnDataReceive, EndlessData.O
 
     override fun onResume() {
         super.onResume()
-        Log.d(TAG, "onResume()")
-        //Todo https://github.com/arimorty/floatingsearchview/issues/218
-        mSearchView?.visibility = View.GONE
-        mSearchView?.visibility = View.VISIBLE
-        mSearchView?.refreshDrawableState()
+        mRecyclerView?.adapter?.notifyDataSetChanged()
+        mEndlessData!!.setQuery(JetbrainsIntership.getLastQuery())
     }
 
     override fun onDestroy() {
@@ -103,6 +111,7 @@ open class SearchFragment : Fragment(), EndlessData.OnDataReceive, EndlessData.O
     // Прогрузка первого результата
     override fun onChangeQuery(oldQuery: String?, newQuery: String?) {
         Log.d(TAG, "OnChangeQuery()")
+        mRecyclerView?.adapter?.notifyDataSetChanged()
         mProgressBar?.visibility = View.VISIBLE
         mRecyclerView?.visibility = View.GONE
     }
@@ -140,7 +149,7 @@ open class SearchFragment : Fragment(), EndlessData.OnDataReceive, EndlessData.O
         }
 
         // Анимация
-        val fragmentTransaction = fragmentManager.beginTransaction()
+        val fragmentTransaction = activity.supportFragmentManager.beginTransaction()
         fragmentTransaction.addToBackStack(TAG)
         fragmentTransaction.addSharedElement(holder.mAva, "user_avatar")
         fragmentTransaction.addSharedElement(holder.mName, "user_name")
