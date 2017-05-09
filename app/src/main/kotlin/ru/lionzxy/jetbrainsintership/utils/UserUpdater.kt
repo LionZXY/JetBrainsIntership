@@ -25,6 +25,9 @@ class UserUpdater(val user: User) {
             override fun onResponse(call: Call<User>, response: Response<User>) {
                 if (response.body() != null) {
                     response.body().score = user.score
+                    response.body().html_url = user.html_url;
+                    if (response.body().blog == "")
+                        response.body().blog = null
                     listener.onUserUpdate(response.body())
                 }
             }
